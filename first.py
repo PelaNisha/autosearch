@@ -14,7 +14,7 @@ input_file = input("Enter the input csv file name: (with .csv extension) ")
 save_file = input("Enter the name of the file to save to : (with .csv extension)")
 
 driver = webdriver.Firefox()
-driver.get("https://www.google.com/maps/@27.6925138,85.2825928,15z")
+driver.get("https://www.google.com/maps/@27.6924389,85.2825928,15z")
 sleep(2)
 
 
@@ -27,20 +27,47 @@ def searchplace(p):
 	submit.click()
 	sleep(3)
 	try:
-		get_text = driver.find_elements_by_xpath('/html/body/div[3]/div[9]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[2]/div[1]/div[3]/div/div[2]/div[2]/div[1]/div/div/div/div[1]')
+		click_first = driver.find_element_by_xpath('/html/body/div[3]/div[9]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[2]/div[1]/div[3]/div/a')
+		click_first.click()
+		sleep(3)
+		click_share = driver.find_element_by_xpath('/html/body/div[3]/div[9]/div[9]/div/div/div[1]/div[3]/div/div[1]/div/div/div[2]/div[4]/div[5]/button/span/img')
+		click_share.click()
+		sleep(3)
+		print("I slept 3 times!")
+		# google_link = driver.fin
+
+		loc = driver.find_elements_by_xpath('/html/body/div[3]/div[1]/div/div[2]/div/div[3]/div/div/div[1]/div[3]/div[2]/div[2]')
+		for l in loc:
+			final_location = l.text
+			print(final_location)
 		sleep(2)
-		name = get_text[0].text
+		list_links=driver.find_elements_by_xpath('/html/body/div[3]/div[1]/div/div[2]/div/div[3]/div/div/div[1]/div[4]/div[2]/div[1]/input')
+		for l in list_links:
+			final_location_link = l.get_attribute('value')
+		sleep(2)
+		final_name = driver.find_elements_by_xpath('/html/body/div[3]/div[1]/div/div[2]/div/div[3]/div/div/div[1]/div[3]/div[2]/div[1]')
+		for f in final_name:
+			f_name = f.text
+		sleep(2)
+		di = {}
+		di['name'] = f_name
+		di['location'] = final_location
+		di['google_map_location'] = final_location_link
+		print(di)
+		li.append(di)
+		di = {} 
+		close_botton = driver.find_element_by_xpath('/html/body/div[3]/div[1]/div/div[2]/div/div[2]/button')
+		close_botton.click()
+		sleep(5)
 		try:
 			driver.find_element_by_xpath('//*[@id="searchboxinput"]').clear()
-			sleep(2)
-			searchplace(name)
-
 		except:
 			print("Error occured!")
-		
+
 	except:
 		submit = driver.find_element_by_xpath('//*[@id="searchbox-searchbutton"]')
 		submit.click()
+		get_gogle_location()
 
 
 # get the location and location link
@@ -100,7 +127,7 @@ def conv_to_csv(json_file, csv_file):
 	
 	data_file.close()
 
-
+rem = []
 # main function 
 def main(input_file, save_file):
 	rows = []
@@ -111,13 +138,14 @@ def main(input_file, save_file):
 	for i in rows[1:]:
 		try:
 			one = str(i[0])
-
 			searchplace(one)
-			get_gogle_location()
+			# get_gogle_location()
 		except:
-			print("Error occured!")
+			one = str(i[0])
+			rem.append(one)
+			# print("Error occured!")
 			pass
-
+	print("Failed cases: ", rem)
 	save_to_file(li, 'mydata.json')
 	conv_to_csv('mydata.json', save_file)
 
