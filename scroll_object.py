@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+from sqlalchemy import true
 
 
 li = []
@@ -38,15 +39,18 @@ def searchplace():
 
 
 def scroll_to_bottom():  
+	set_func = True
 	sleep(3)
-	try:
-		while True:
+	while set_func == True:
+		try:
 			div_locator = "/html/body/div[3]/div[9]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[2]/div[1]"
 			div_el = driver.find_element_by_xpath(div_locator)
 			driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", div_el)
 			sleep(2)
-	except:
-		get_names()
+			set_func = False
+		except:
+			print("INto the except case!")
+	get_names()
 	
 
 def get_names():
