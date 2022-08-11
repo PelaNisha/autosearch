@@ -40,16 +40,32 @@ def searchplace():
 
 def scroll_to_bottom():  
 	set_func = True
-	sleep(3)
+	sleep(4)
 	while set_func == True:
+		print("inside while!")
 		try:
+			
+			print("TRY try !")
 			div_locator = "/html/body/div[3]/div[9]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[2]/div[1]"
 			div_el = driver.find_element_by_xpath(div_locator)
 			driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", div_el)
-			sleep(2)
-			set_func = False
+			print(" DRiver Execute : ", div_el)
+			sleep(3)
+			try:
+				print("her last words! ")
+				limit_text = driver.find_element_by_xpath('/html/body/div[3]/div[9]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[2]/div[1]/div[145]/div/p/span/span[1]')
+				print(limit_text.text)
+				set_func = False
+				break
+			except:
+				pass
 		except:
 			print("INto the except case!")
+			break
+	sleep(2)
+	back_to_top = driver.find_element_by_xpath("/html/body/div[3]/div[9]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[3]/div/div/button/span[1]")
+	back_to_top.click()
+	sleep(2)
 	get_names()
 	
 
@@ -73,4 +89,4 @@ sleep(3)
 scroll_to_bottom()
 
 # close the driver
-driver.close()
+# driver.close()
